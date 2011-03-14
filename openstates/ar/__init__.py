@@ -14,10 +14,10 @@ metadata = dict(
         {'name': '2011-2012',
          'start_year': 2011,
          'end_year': 2012,
-         'sessions': ['2011']}
+         'sessions': ['2011R']}
         ],
     session_details={
-        '2011': {'start_date': datetime.date(2011, 1, 10),
+        '2011R': {'start_date': datetime.date(2011, 1, 10),
                  'end_date': None,
                  'type': 'primary'}
         },
