@@ -11,6 +11,8 @@ CHAMBERS = {
     'S': 'upper',
 }
 
+test_file = "/Users/webdesk/Sprints/OpenGov/dfadooas/test.txt"
+
 class ARBillsScraper(BillScraper):
     state = 'ar'
 
@@ -20,7 +22,7 @@ class ARBillsScraper(BillScraper):
         count = 0
         lines = file.split('\n')
         for item in lines:
-            if item:
+            if item and count == 0:
                 item_chamber, type, bill_number, title, title_sub_1, title_sub_2, title_sub_3, title_sub_4, \
                 title_sub_5, title_sub_6, record_id, initial_sponsor, act_number, initial_date, action_date, \
                 unknown_legislator, bill_id, congressional_session = item.split('|')
@@ -31,12 +33,17 @@ class ARBillsScraper(BillScraper):
                         bill.add_sponsor('primary', initial_sponsor)
                         bill.add_source(url)
                     self.save_bill(bill)
+                    try:
+                        html = self.urlopen('http://www.arkleg.state.ar.us/assembly/' + congressional_session[:4] + '/' + congressional_session + '/Pages/BillInformation.aspx?measureno=' + bill_id)
+                    except:
+                        pass
+                    else:
+                        with self.urlopen(html) as page:
+                            root = lxml.html.fromstring(page)
+                            print "TEST ME"
+                            print root
                     count += 1
         return count
-#                 try:
-#                     html = urllib2.urlopen('http://www.arkleg.state.ar.us/assembly/' + congressional_session[:4] + '/' + congressional_session + '/Pages/BillInformation.aspx?measureno=' + bill_id)
-#                 except:
-#                     pass
 
     def scrape(self, chamber, session):
         count = self.all_scrape(chamber, session)
